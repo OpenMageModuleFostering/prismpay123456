@@ -32,14 +32,24 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
      * 
      * In this function i charge credit card and mark order as completed
      */
-    
-    public function authorize(Varien_Object $payment, $amount) {
+     public function authorize(Varien_Object $payment, $amount) {
+        
+        // this function is not in used we charged customer credit card in authoriza function/////
+        
+            Mage::log('PrismPay CC authorize!');
+            return $this;
+        
+    }
+   
+   
+   
+    public function capture(Varien_Object $payment, $amount) {
         $order = $payment->getOrder();
         try {
-            Mage::log('PrismPay CC Authorize!');
+            Mage::log('PrismPay CC Capture!');
             
             
-            $is_applyForProfileAdd=$_REQUEST["payment"]["add_profile"];
+            $is_applyForProfileAdd=@$_REQUEST["payment"]["add_profile"];
                 
                 
             
@@ -119,7 +129,7 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
             $this->setStore($payment->getOrder()->getStoreId());
             $payment->setStatus(self::STATUS_APPROVED);
             $payment->setAmount($amount);
-            $payment->setLastTransId($orderId);
+            $payment->setLastTransId($transactionId);
             
             //save profile id of customer in to database
             $transactionData=array(
@@ -191,12 +201,6 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
         return $this;
     }
    
-    public function capture(Varien_Object $payment, $amount) {
-        
-        // this function is not in used we charged customer credit card in authoriza function/////
-        
-        
-    }
    
     /**
      * Payment refund
@@ -214,7 +218,7 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
             
                 
             
-                $temp_transaction_id=$payment->getLastTransId();
+                $temp_transaction_id=$payment->getLastTransId()."-";
                 $dash_pos = strpos($temp_transaction_id, "-");
                 $transaction_id=substr($temp_transaction_id,0,$dash_pos);
                 if($transaction_id=="")
@@ -311,19 +315,19 @@ Mage::log('Data '.$fields_string);
         return $this;
     }
 
-    public function cancel(Varien_Object $payment) {
+   public function cancel(Varien_Object $payment) {
 
         // void the order if canceled
+        
         Mage::log('Order: cancel!');
-
-        return $this;
+		Mage::throwException("Payment Could not be refund, Kindly use Refund Process Using CreditMemo");
     }
 
     public function void(Varien_Object $payment) {
 
 
         Mage::log('Order: void!');
-
+		Mage::throwException("Payment Could not be refund, Kindly use Refund Process Using CreditMemo");
         /* Whatever you call to void a payment in your gateway */
     }
 

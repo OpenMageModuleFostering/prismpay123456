@@ -68,7 +68,7 @@
                 <title>Credit Card (prismpay)</title>
  
                 <cctypes>AE,VI,MC,DI</cctypes>
-                <payment_action>authorize</payment_action>
+                <payment_action>authorize_capture</payment_action>
                 <allowspecific>0</allowspecific>
             </prismpay>
          </payment>

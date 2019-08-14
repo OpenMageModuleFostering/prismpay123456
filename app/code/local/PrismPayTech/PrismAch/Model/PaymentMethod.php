@@ -40,10 +40,19 @@ class PrismPayTech_PrismAch_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
                Mage::log("Payment Method assignData "); 
             return $this;
         }
-    public function authorize(Varien_Object $payment, $amount) {
+    
+     public function authorize(Varien_Object $payment, $amount) {
+        
+        // this function is not in used /////
+        
+        Mage::log('PrismAch Authorize!');
+    }
+    
+    
+    public function capture(Varien_Object $payment, $amount) {
         $order = $payment->getOrder();
         try {
-            Mage::log('PrismAch Authorize!');
+            Mage::log('PrismAch Capture!');
             
             $ckname=$_REQUEST["payment"]["ckname"];
             $ckaba=$_REQUEST["payment"]["ckaba"];
@@ -91,7 +100,7 @@ class PrismPayTech_PrismAch_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
 
             $payment->setStatus(self::STATUS_ERROR);
             $payment->setAmount($amount);
-            $payment->setLastTransId($orderId);
+            $payment->setLastTransId($transactionId);
             $this->setStore($payment->getOrder()->getStoreId());
             Mage::throwException($e->getMessage());
         }
@@ -106,7 +115,7 @@ class PrismPayTech_PrismAch_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
             $this->setStore($payment->getOrder()->getStoreId());
             $payment->setStatus(self::STATUS_APPROVED);
             $payment->setAmount($amount);
-            $payment->setLastTransId($orderId);
+            $payment->setLastTransId($transactionId);
             
             $payment->setTransactionId($transactionId);
             $payment->setIsTransactionClosed(0);
@@ -146,12 +155,7 @@ class PrismPayTech_PrismAch_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
         return $this;
     }
    
-    public function capture(Varien_Object $payment, $amount) {
-        
-        // this function is not in used /////
-        
-        
-    }
+   
     public function validate()
     {
         /*
@@ -178,7 +182,7 @@ class PrismPayTech_PrismAch_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
             Mage::log('PrismPay Profile Refund!');
             
             
-                $temp_transaction_id=$payment->getLastTransId();
+                $temp_transaction_id=$payment->getLastTransId()."-";
                 $dash_pos = strpos($temp_transaction_id, "-");
                 $transaction_id=substr($temp_transaction_id,0,$dash_pos);
                 if($transaction_id=="")
@@ -277,19 +281,19 @@ class PrismPayTech_PrismAch_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
         return $this;
     }
 
-    public function cancel(Varien_Object $payment) {
+   public function cancel(Varien_Object $payment) {
 
         // void the order if canceled
+        
         Mage::log('Order: cancel!');
-
-        return $this;
+		Mage::throwException("Payment Could not be refund, Kindly use Refund Process Using CreditMemo");
     }
 
     public function void(Varien_Object $payment) {
 
 
         Mage::log('Order: void!');
-
+		Mage::throwException("Payment Could not be refund, Kindly use Refund Process Using CreditMemo");
         /* Whatever you call to void a payment in your gateway */
     }
 
