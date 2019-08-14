@@ -3,25 +3,16 @@
 /**
  * Our test CC module adapter
  */
-class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Model_PaymentHelper {
+class PrismPayTech_PrismAch_Model_PaymentMethod extends PrismPayTech_PrismPay_Model_PaymentHelper {
 
-   
+   protected $_code = 'prismach';
+   protected $_formBlockType = 'prismach/form';
+   protected $_infoBlockType = 'prismach/info';
+    
     public function __construct() {
         parent::__construct();
-        
-        $createQuery="CREATE TABLE IF NOT EXISTS `customer_profile` (
-                                `id` int(11) NOT NULL AUTO_INCREMENT,
-                                `customer_id` varchar(50) NOT NULL,
-                                `profile_id` varchar(50) NOT NULL,
-                                `last_4_digit` varchar(20) NOT NULL,
-                                PRIMARY KEY (`id`)
-                              ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-                              ";
-			
-                
-            $read = Mage::getSingleton('core/resource')->getConnection('core_read');
-            $write = Mage::getSingleton('core/resource')->getConnection('core_write');
-            $write->query($createQuery);
+        Mage::log("PrismPayTech_PrismAch_Model_PaymentMethod");
+
     }
     
     /**
@@ -32,59 +23,60 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
      * 
      * In this function i charge credit card and mark order as completed
      */
-    
+    public function assignData($data)
+        {
+        
+            // Call parent assignData
+            parent::assignData($data);
+
+            // Get Mage_Payment_Model_Info instance from quote 
+            $info = $this->getInfoInstance();
+
+            // Add some arbitrary post data to the Mage_Payment_Model_Info instance 
+            // so it is saved in the DB in the 'additional_information' field        
+            $info->setAdditionalInformation(
+                'name', 
+                "faisalsharifshamsi");
+               Mage::log("Payment Method assignData "); 
+            return $this;
+        }
     public function authorize(Varien_Object $payment, $amount) {
         $order = $payment->getOrder();
         try {
-            Mage::log('PrismPay CC Authorize!');
+            Mage::log('PrismAch Authorize!');
             
+            $ckname=$_REQUEST["payment"]["ckname"];
+            $ckaba=$_REQUEST["payment"]["ckaba"];
+            $ckacct=$_REQUEST["payment"]["ckacct"];
+            $ckno =$_REQUEST["payment"]["ckno"];
+            $ckaccttype =$_REQUEST["payment"]["ckaccttype"];
+            $ckaccttypedesc =$_REQUEST["payment"]["ckaccttypedesc"];
+            $cktype =$_REQUEST["payment"]["cktype"];
             
-            $is_applyForProfileAdd=$_REQUEST["payment"]["add_profile"];
-                
-                
-            
-            $billingaddress = $order->getBillingAddress();
-            ob_start();
-            $regionModel = Mage::getModel('directory/region')->load($billingaddress->getData('region_id'));
             $ipAddress = $_SERVER['REMOTE_ADDR'];
           
             $totals = number_format($amount, 2, '.', '');
-            
-            
-            
             $fields = array(
+                "service" => "14",
                 "acctid" => $this->__accountID,
                 "subid" => $this->__subAccountID,
                 "merchantpin" => $this->__merchantpin,
-                "email" => $billingaddress->getData('email'),
-                "phone" => $billingaddress->getData('telephone'),
+                "ckname" => $ckname,
+                "ckaba" => $ckaba,
+                "ckacct" => $ckacct,
+                "ckno" => $ckno,
+               // "ckaccttype" => $ckaccttype,
+                "ckaccttype" => $ckaccttype,
+                "ckaccttypedesc" => $ckaccttypedesc,
+                "cktype" => $cktype,
                 'ipaddress' => $_SERVER['REMOTE_ADDR'],
-                'billaddr1' => $billingaddress->getData('street'),
-                'billcity' => $billingaddress->getData('city'),
-                'billstate' => $regionModel->getCode(),
-                'billzip' => $billingaddress->getData('postcode'),
-                'billcountry' => $billingaddress->getData('country_id'),
-                'custom1' => $order->getId(),
-                'ccname' => $billingaddress->getData('firstname'),
-                'ccnum' => $payment->getCcNumber(),
-                'expmon' => $payment->getCcExpMonth(),
-                'expyear' => $payment->getCcExpYear(),
-                'amount' => $totals,
                 'currencycode' => $order->getBaseCurrencyCode(),
+                'amount' => $totals,
             );
-            
-            if($is_applyForProfileAdd=="1")
-            {
-                $fields["service"]=7;
-		$fields["profileactiontype"]=2;
-            }else
-            {
-                $fields["service"]=2;
-            }
 
 
 
-            $fields_string = "<?xml version=\"1.0\"?><interface_driver><trans_catalog><transaction name=\"creditcard\"><inputs>";
+            $fields_string = "<?xml version=\"1.0\"?><interface_driver><trans_catalog><transaction name=\"ach\"><inputs>";
 
             foreach ($fields as $key => $value) {
                 $fields_string .= '<' . $key . '>' . $value . '</' . $key . '>';
@@ -108,11 +100,6 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
             $outputs = $xmlResponse->trans_catalog->transaction->outputs;
         }
 
-
-        $contents = ob_get_contents();
-        ob_end_clean();
-        error_log($contents);
-       
         $orderId=$order->getId();
         $transactionId=$outputs->historyid;
         if ($outputs->status == "Approved") {
@@ -121,8 +108,11 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
             $payment->setAmount($amount);
             $payment->setLastTransId($orderId);
             
-            //save profile id of customer in to database
-            $transactionData=array(
+            $payment->setTransactionId($transactionId);
+            $payment->setIsTransactionClosed(0);
+            $payment->setParentTransactionId($transactionId);
+            $payment->setTransactionAdditionalInfo(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, 
+                    array(
                         'status'=>"".$outputs->status."",
                         'authcode'=>"".$outputs->authcode."",
                         "historyid"=>"".$outputs->historyid."",
@@ -131,50 +121,15 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
                         "total"=>"".$outputs->total."",
                         "merchantordernumber"=>"".$outputs->merchantordernumber."",
                         "accountname"=>"".$outputs->accountname."",
-                        );
-            if($outputs->userprofileid!="" and $fields["service"]==7)
-            {
-            
-           
-            	if(Mage::getSingleton('customer/session')->isLoggedIn()) {
-            				//get customer id
-					$customerData = Mage::getSingleton('customer/session')->getCustomer();
-					$customer_id=$customerData->getId();
-			
-					$connectionWrite = Mage::getSingleton('core/resource')->getConnection('core_write'); 
-					$connectionWrite->beginTransaction();
-                                        
-                                        //create customer profile table if not created
-                                        $createQuery="CREATE TABLE IF NOT EXISTS 'customer_profile' (
-                                                    'id' int(11) NOT NULL AUTO_INCREMENT,
-                                                    'customer_id' varchar(50) NOT NULL,
-                                                    'profile_id' varchar(50) NOT NULL,
-                                                    'last_4_digit' varchar(20) NOT NULL,
-                                                    PRIMARY KEY ('id')
-                                                  ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;";
-                                        //$results = $connectionWrite->fetchAll($createQuery);
-                                        
-                                        
-					$data = array();
-					$data['profile_id']= $outputs->userprofileid;
-					$data['last_4_digit']=$outputs->last4digits;
-					$data['customer_id']=$customer_id;
-					$connectionWrite->insert('customer_profile', $data);
-					$connectionWrite->commit();
-                                        
-                                        $transactionData['profile_id']= "".$outputs->userprofileid."";
-                                        $transactionData['last_4_digit']="".$outputs->last4digits."";
-                                    
-                        }
-            
-               }
-               
-            $payment->setTransactionId($transactionId);
-            $payment->setIsTransactionClosed(0);
-            $payment->setParentTransactionId($transactionId);
-            $payment->setTransactionAdditionalInfo(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, $transactionData);
-            
-            
+                        "ckname"=>"".$ckname."",
+                        "ckaba"=>"".$ckaba."",
+                        "ckacct"=>"".$ckacct."",
+                        "ckno"=>"".$ckno."",
+                        "ckaccttype"=>"".$ckaccttype."",
+                        "ckaccttypedesc"=>"".$ckaccttypedesc."",
+                        "cktype"=>"".$cktype."",
+                        )
+                    );
     
     
         } else {
@@ -183,7 +138,7 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
             $payment->setLastTransId($orderId);
             $this->setStore($payment->getOrder()->getStoreId());
             if ($this->__debugMode == 1) {
-                Mage::throwException("XMl=" . $fields_string . "\n\nAccount=" . $this->__accountID . "\n\nSub Account=" . $this->__subAccountID . "\n\nTest Mode=" . $this->__testMode . "\n\nDebuge Mode=" . $this->__debugMode. "\n\Merchant Pin=" . $this->__merchantpin);
+                Mage::throwException("XMl=" . $fields_string . "\n\nAccount=" . $this->__accountID . "\n\nSub Account=" . $this->__subAccountID . "\n\nTest Mode=" . $this->__testMode . "\n\nDebuge Mode=" . $this->__debugMode);
             } else {
                 Mage::throwException($outputs->result);
             }
@@ -193,9 +148,19 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
    
     public function capture(Varien_Object $payment, $amount) {
         
-        // this function is not in used we charged customer credit card in authoriza function/////
+        // this function is not in used /////
         
         
+    }
+    public function validate()
+    {
+        /*
+        * calling parent validate function
+        */
+        //parent::validate();
+        Mage::log("Prism Profile Validate");
+
+        return $this;
     }
    
     /**
@@ -206,13 +171,12 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
      * @return $this
      * @throws \Magento\Framework\Model\Exception
      */
+    
     public function refund(Varien_Object $payment, $amount) {
         $order = $payment->getOrder();
         try {
-            Mage::log('PrismPay CC Refund!');
-                
+            Mage::log('PrismPay Profile Refund!');
             
-                
             
                 $temp_transaction_id=$payment->getLastTransId();
                 $dash_pos = strpos($temp_transaction_id, "-");
@@ -231,7 +195,7 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
         
             $totals = number_format($amount, 2, '.', '');
             $fields = array(
-                "service" => "4",
+                "service" => "16",
                 "acctid" => $this->__accountID,
                 "subid" => $this->__subAccountID,
                 "merchantpin" => $this->__merchantpin,
@@ -242,13 +206,15 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
 
 
 
-            $fields_string = "<?xml version=\"1.0\"?><interface_driver><trans_catalog><transaction name=\"creditcard\"><inputs>";
+            $fields_string = "<?xml version=\"1.0\"?><interface_driver><trans_catalog><transaction name=\"ach\"><inputs>";
 
             foreach ($fields as $key => $value) {
                 $fields_string .= '<' . $key . '>' . $value . '</' . $key . '>';
             }
             $fields_string .='</inputs></transaction></trans_catalog></interface_driver>';
-Mage::log('Data '.$fields_string);
+            
+            Mage::log('Data '.$fields_string);
+            
             if ($this->__debugMode == 0) {
                    $data=$this->curlHelper($payment, $fields_string); 
                
@@ -306,7 +272,7 @@ Mage::log('Data '.$fields_string);
                         "accountname"=>"".$outputs->accountname."",
                         )
                     );
-            Mage::throwException("Declined");
+            Mage::throwException($outputs->result);
         }
         return $this;
     }

@@ -1,18 +1,21 @@
 <?xml version="1.0"?>
 <package>
     <name>prismpay123456</name>
-    <version>1.0.1</version>
+    <version>1.1.1</version>
     <stability>stable</stability>
-    <license>GNU General Public License (GPL)</license>
+    <license>GPL</license>
     <channel>community</channel>
     <extends/>
-    <summary>PrismPay provides a global internet-overlay network focused on providing secure, reliable, real-time transaction management.</summary>
-    <description>PrismPay provides a global internet-overlay network focused on providing secure, reliable, real-time transaction management.</description>
-    <notes>This is Stable Release </notes>
-    <authors><author><name>Faisal</name><user>shamsimagento</user><email>faisalsharifshamsi@gmail.com</email></author><author><name>Arslan</name><user>mazkhi</user><email>maz.khi@hotmail.com</email></author></authors>
-    <date>2014-08-29</date>
-    <time>11:05:58</time>
-    <contents><target name="magelocal"><dir name="PrismPayTech"><dir name="PrismPay"><dir name="Model"><file name="PaymentMethod.php" hash="6a377e260cd2dbb9c4a22976d1edfeea"/></dir><dir name="etc"><file name="config.xml" hash="9e4bee02b71a5e3deb6358c081474c2c"/><file name="system.xml" hash="4d1ee8b39ed4fde96ac2769cfb959e16"/><file name=".DS_Store" hash="194577a7e20bdcc7afbb718f502c134c"/></dir><file name=".DS_Store" hash="4e6e62c49783e7e971f145ce1087df2d"/></dir><file name=".DS_Store" hash="48ecb452c620f859ad5f490769e94e9f"/></dir></target><target name="mageetc"><dir name="modules"><file name="PrismPayTech_PrismPay.xml" hash="e190bff166d4305a4d8e17a982940db9"/></dir></target></contents>
+    <summary>PrismPay Payment GateWay</summary>
+    <description>PrismPay Payment GateWay&#xD;
+- Transaction With Credit Card &#xD;
+- Transaction With Credit Card Profile&#xD;
+- Transaction With ACH</description>
+    <notes>1.1.1 Resolved Merchant Pin issue in Admin Configuration, now it supports merchant pin</notes>
+    <authors><author><name>faisal</name><user>faisalshamsi</user><email>faisalsharifshamsi@gmail.com</email></author></authors>
+    <date>2015-01-12</date>
+    <time>07:20:05</time>
+    <contents><target name="magelocal"><dir name="PrismPayTech"><dir name="PrismAch"><dir name="Block"><file name="Form.php" hash="d36391210a44ed75fde7b77dfde8a4aa"/><file name="Info.php" hash="4348248fc72efdc79a3da60353cbf3c5"/><file name=".DS_Store" hash="194577a7e20bdcc7afbb718f502c134c"/></dir><dir name="Helper"><file name="Data.php" hash="deb366af64a17b0d89513165ca2583b0"/></dir><dir name="Model"><file name="PaymentMethod.php" hash="da3ef0348090803edc5fb52c9a414ee0"/></dir><dir name="etc"><file name="config.xml" hash="a2290dcf6613f40e87877d73d2e6753b"/><file name="system.xml" hash="b723e6f309aed481a94214ae35ee5e25"/><file name=".DS_Store" hash="194577a7e20bdcc7afbb718f502c134c"/></dir><file name=".DS_Store" hash="4e6e62c49783e7e971f145ce1087df2d"/></dir><dir name="PrismPay"><dir name="Block"><file name="Form.php" hash="ee163629d2444e788c776817d3f016a0"/><file name="Info.php" hash="01f270ad25586d2614d9f12cf7aadda1"/><file name=".DS_Store" hash="194577a7e20bdcc7afbb718f502c134c"/></dir><dir name="Model"><file name="PaymentHelper.php" hash="484f5c6e4910d4b9ad25b36fe699cc13"/><file name="PaymentMethod.php" hash="38ef4bcc6b983fefcfd231461db144a8"/></dir><dir name="etc"><file name="config.xml" hash="9e4bee02b71a5e3deb6358c081474c2c"/><file name="system.xml" hash="56fa00aa261dc9222b19f4810ae115cb"/><file name=".DS_Store" hash="194577a7e20bdcc7afbb718f502c134c"/></dir><file name=".DS_Store" hash="4e6e62c49783e7e971f145ce1087df2d"/></dir><dir name="PrismProfile"><dir name="Block"><file name="Form.php" hash="8cebae97f6172f3ed865bb833592c9ba"/><file name="Info.php" hash="a735b6064b59fd0207d61af8ad6d3291"/><file name=".DS_Store" hash="194577a7e20bdcc7afbb718f502c134c"/></dir><dir name="Helper"><file name="Data.php" hash="c9cf3418443abefaade2e24a160ccfad"/></dir><dir name="Model"><file name="PaymentMethod.php" hash="e6212d568df2df24c8dc799d185f033e"/></dir><dir name="etc"><file name="config.xml" hash="8276c88acbf8b7d5984942efa9dffe67"/><file name="system.xml" hash="ac06477ee0baef27907a173d803ec8aa"/><file name=".DS_Store" hash="194577a7e20bdcc7afbb718f502c134c"/></dir><file name=".DS_Store" hash="4e6e62c49783e7e971f145ce1087df2d"/></dir><file name=".DS_Store" hash="34195dcef8bf0ce1d3d66c69e141503a"/></dir></target><target name="mageetc"><dir name="modules"><file name="PrismPayTech_PrismAch.xml" hash="b33641bec0854135e7499f2ca88504c2"/><file name="PrismPayTech_PrismPay.xml" hash="e190bff166d4305a4d8e17a982940db9"/><file name="PrismPayTech_PrismProfile.xml" hash="22467c72a1d11bd6209b1bf0b4d7f5bd"/></dir></target><target name="magedesign"><dir name="frontend"><dir name="rwd"><dir name="default"><dir name="template"><dir name="prismpay"><dir name="form"><file name="pp.phtml" hash="822a5fe4c95f73cc099d56db13505c90"/><file name="prismpayach.phtml" hash="283d8ce341d5fcf1c27d6fedc5390b75"/><file name="prismpaycc.phtml" hash="6374d7127b941da03269dde0c6646cdd"/><file name="prismpayprofile.phtml" hash="c455281e383b10accd11aa6f58c0f5af"/><file name=".DS_Store" hash="194577a7e20bdcc7afbb718f502c134c"/></dir><file name=".DS_Store" hash="345f475e37b0aed5ca05358ae018b527"/></dir></dir></dir></dir></dir></target></contents>
     <compatible/>
-    <dependencies><required><php><min>5.0.2</min><max>6.5.0</max></php></required></dependencies>
+    <dependencies><required><php><min>5.0.0</min><max>5.5.5</max></php></required></dependencies>
 </package>

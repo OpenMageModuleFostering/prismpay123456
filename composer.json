@@ -1,12 +1,12 @@
 {
     "name": "OpenMageModuleFostering/prismpay123456",
     "type": "magento-module",
-    "license": "GNU-General-Public-License-(GPL)",
+    "license": "GPL",
     "homepage": "",
-    "description": "PrismPay provides a global internet-overlay network focused on providing secure, reliable, real-time transaction management.",
+    "description": "PrismPay Payment GateWay",
     "authors": [
     {
-        "name": "Faisal",
+        "name": "faisal",
         "email": "faisalsharifshamsi@gmail.com"
     }
 ],
