@@ -1,31 +1,20 @@
 <?xml version="1.0"?>
 <config>
-   <sections>
-<!-- payment tab -->
+    <sections>
         <payment>
             <groups>
-<!-- newmodule fieldset -->
                 <prismprofile translate="label" module="prismprofile">
-<!-- will have title 'New Module' -->
                     <label>PrismPayProfile</label>
-<!-- position between other payment methods -->
                     <sort_order>670</sort_order>
-<!-- do not show this configuration options in store scope -->
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
                     <fields>
-<!-- is this payment method active for the website? -->
                         <active translate="label">
-<!-- label for the field -->
                             <label>Enabled</label>
-<!-- input type for configuration value -->
                             <frontend_type>select</frontend_type>
-<!-- model to take the option values from -->
                             <source_model>adminhtml/system_config_source_yesno</source_model>
-<!-- field position -->
                             <sort_order>1</sort_order>
-<!-- do not show this field in store scope -->
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -47,16 +36,16 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </title>
-                         <sort_order translate="label">
-			    <label>Sort Order</label>
-			    <frontend_type>text</frontend_type>
-			    <sort_order>200</sort_order>
-			    <show_in_default>1</show_in_default>
-			    <show_in_website>1</show_in_website>
-			    <show_in_store>0</show_in_store>
-			    <frontend_class>validate-number</frontend_class>
-			</sort_order>
-			
+                        <sort_order translate="label">
+                            <label>Sort Order</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <frontend_class>validate-number</frontend_class>
+                        </sort_order>
+
 
                     </fields>
                 </prismprofile>

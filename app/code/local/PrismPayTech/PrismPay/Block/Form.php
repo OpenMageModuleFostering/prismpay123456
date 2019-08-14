@@ -167,7 +167,7 @@ class PrismPayTech_PrismPay_Block_Form extends Mage_Payment_Block_Form
 				///get customer card profile
 				$connectionRead = Mage::getSingleton('core/resource')->getConnection('core_read');
 				$select = $connectionRead->select()
-				->from('customer_profile', array('*'))
+				->from('prismpay_customer_profile', array('*'))
 				->where('customer_id=?',$customer_id);
 				//->group('customer_id');
 				$row =$connectionRead->fetchRow($select);   //return rows

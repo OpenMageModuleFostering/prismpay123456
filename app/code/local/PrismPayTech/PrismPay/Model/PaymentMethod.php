@@ -9,19 +9,6 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
     public function __construct() {
         parent::__construct();
         
-        $createQuery="CREATE TABLE IF NOT EXISTS `customer_profile` (
-                                `id` int(11) NOT NULL AUTO_INCREMENT,
-                                `customer_id` varchar(50) NOT NULL,
-                                `profile_id` varchar(50) NOT NULL,
-                                `last_4_digit` varchar(20) NOT NULL,
-                                PRIMARY KEY (`id`)
-                              ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-                              ";
-			
-                
-            $read = Mage::getSingleton('core/resource')->getConnection('core_read');
-            $write = Mage::getSingleton('core/resource')->getConnection('core_write');
-            $write->query($createQuery);
     }
     
     /**
@@ -75,7 +62,7 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
                 'billzip' => $billingaddress->getData('postcode'),
                 'billcountry' => $billingaddress->getData('country_id'),
                 'custom1' => $order->getId(),
-                'ccname' => $billingaddress->getData('firstname'),
+                'ccname' => $billingaddress->getData('firstname')." ".$billingaddress->getData('lastname'),
                 'ccnum' => $payment->getCcNumber(),
                 'expmon' => $payment->getCcExpMonth(),
                 'expyear' => $payment->getCcExpYear(),
@@ -154,22 +141,12 @@ class PrismPayTech_PrismPay_Model_PaymentMethod extends PrismPayTech_PrismPay_Mo
 					$connectionWrite = Mage::getSingleton('core/resource')->getConnection('core_write'); 
 					$connectionWrite->beginTransaction();
                                         
-                                        //create customer profile table if not created
-                                        $createQuery="CREATE TABLE IF NOT EXISTS 'customer_profile' (
-                                                    'id' int(11) NOT NULL AUTO_INCREMENT,
-                                                    'customer_id' varchar(50) NOT NULL,
-                                                    'profile_id' varchar(50) NOT NULL,
-                                                    'last_4_digit' varchar(20) NOT NULL,
-                                                    PRIMARY KEY ('id')
-                                                  ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;";
-                                        //$results = $connectionWrite->fetchAll($createQuery);
-                                        
                                         
 					$data = array();
 					$data['profile_id']= $outputs->userprofileid;
 					$data['last_4_digit']=$outputs->last4digits;
 					$data['customer_id']=$customer_id;
-					$connectionWrite->insert('customer_profile', $data);
+					$connectionWrite->insert('prismpay_customer_profile', $data);
 					$connectionWrite->commit();
                                         
                                         $transactionData['profile_id']= "".$outputs->userprofileid."";

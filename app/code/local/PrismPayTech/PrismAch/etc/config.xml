@@ -1,82 +1,59 @@
 <?xml version="1.0"?>
 <config>
     <modules>
-       <PrismPayTech_PrismAch>
-<!-- declare module's version information for database updates -->
-          <version>0.1.0</version>
-       </PrismPayTech_PrismAch>
+        <PrismPayTech_PrismAch>
+            <version>0.1.0</version>
+        </PrismPayTech_PrismAch>
     </modules>
- 
+
     <global>
-<!-- IMPORTANT: if you use your own namespace (i.e. CompanyName) you also have to declare blocks group for new module. See topic: http://www.magentocommerce.com/boards/viewthread/22416/#t102732 -->
-    <blocks>
-        <prismach>
-            <class>PrismPayTech_PrismAch_Block</class>
-        </prismach>
-    </blocks>
-       
-        
-<!-- declare model group for new module -->
-        <models>
-<!-- model group alias to be used in Mage::getModel('newmodule/...') -->
+        <blocks>
             <prismach>
-<!-- base class name for the model group -->
+                <class>PrismPayTech_PrismAch_Block</class>
+            </prismach>
+        </blocks>
+        <models>
+            <prismach>
                 <class>PrismPayTech_PrismAch_Model</class>
             </prismach>
         </models>
-         <helpers>
+        <helpers>
             <prismach>
                 <class>PrismPayTech_PrismAch_Helper</class>
             </prismach>
         </helpers>
- 
-<!-- declare resource setup for new module -->
         <resources>
-<!-- resource identifier -->
             <prismach_setup>
-<!-- specify that this resource is a setup resource and used for upgrades -->
                 <setup>
-<!-- which module to look for install/upgrade files in -->
                     <module>PrismPayTech_PrismAch</module>
                 </setup>
-<!-- specify database connection for this resource -->
                 <connection>
-<!-- do not create new connection, use predefined core setup connection -->
                     <use>core_setup</use>
                 </connection>
             </prismach_setup>
             <prismach_write>
                 <connection>
-                  <use>core_write</use>
+                    <use>core_write</use>
                 </connection>
             </prismach_write>
             <prismach_read>
-               <connection>
-                <use>core_read</use>
-              </connection>
+                <connection>
+                    <use>core_read</use>
+                </connection>
             </prismach_read>
         </resources>
     </global>
- 
-<!-- declare default configuration values for this module -->
     <default>
-<!-- 'payment' configuration section (tab) -->
         <payment>
-<!-- 'newmodule' configuration group (fieldset) -->
             <prismach>
-<!-- by default this payment method is inactive -->
                 <active>0</active>
-<!-- model to handle logic for this payment method -->
                 <model>prismach/paymentMethod</model>
-<!-- order status for new orders paid by this payment method -->
                 <order_status>pending</order_status>
-<!-- default title for payment checkout page and order view page -->
                 <title>PrismPay ACH</title>
- 
                 <cctypes>AE,VI,MC,DI</cctypes>
                 <payment_action>authorize_capture</payment_action>
                 <allowspecific>0</allowspecific>
             </prismach>
-         </payment>
+        </payment>
     </default>
 </config>
