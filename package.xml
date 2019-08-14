@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+    <name>prismpay123456</name>
+    <version>1.0.0</version>
+    <stability>stable</stability>
+    <license>GNU General Public License (GPL)</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>PrismPay provides a global internet-overlay network focused on providing secure, reliable, real-time transaction management.</summary>
+    <description>PrismPay provides a global internet-overlay network focused on providing secure, reliable, real-time transaction management.</description>
+    <notes>This is Stable Version</notes>
+    <authors><author><name>Faisal</name><user>shamsimagento</user><email>faisalsharifshamsi@gmail.com</email></author><author><name>Arslan</name><user>mazkhi</user><email>maz.khi@hotmail.com</email></author></authors>
+    <date>2014-06-10</date>
+    <time>13:32:33</time>
+    <contents><target name="magelocal"><dir name="PrismPayTech"><dir name="PrismPay"><dir name="Model"><file name="PaymentMethod.php" hash="6a377e260cd2dbb9c4a22976d1edfeea"/></dir><dir name="etc"><file name="config.xml" hash="9e4bee02b71a5e3deb6358c081474c2c"/><file name="system.xml" hash="4d1ee8b39ed4fde96ac2769cfb959e16"/><file name=".DS_Store" hash="194577a7e20bdcc7afbb718f502c134c"/></dir></dir></dir></target><target name="mageetc"><dir name="."><file name="PrismPayTech_PrismPay" hash=""/></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.0.2</min><max>5.4.0</max></php></required></dependencies>
+</package>
